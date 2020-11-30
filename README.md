@@ -8,5 +8,7 @@
 | long        | ##       | 2,29         | 0               |
 | wrapped     | hashcode | 4,843        | 0               |
 | wrapped     | ##       | 4,86         | 0               |
+| wrappedwith | hashcode | 1,964        | 0               |
+| wrappedwith | ##       | 2,099        | 0               |
 | value class | hashcode | 3,317        | 16              |
 | value class | ##       | 3,37         | 16              |
