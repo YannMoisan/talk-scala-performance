@@ -16,6 +16,9 @@ import org.openjdk.jmh.annotations.{
   Warmup
 }
 
+import scala.runtime.Statics
+import scala.util.hashing.MurmurHash3
+
 @State(Scope.Benchmark)
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -27,12 +30,14 @@ class HashCodeBench {
   var int: Int = _
   var long: Long = _
   var wrappedInt: Wrapped = _
+  var wrappedWithHash: WrappedWithHash = _
   var valueClass: ValueClass = _
   @Setup
   def setup() = {
     int = 1234
     long = 1234L
     wrappedInt = Wrapped(1234)
+    wrappedWithHash = WrappedWithHash(1234)
     valueClass = ValueClass(1234)
   }
 
@@ -65,11 +70,25 @@ class HashCodeBench {
     wrappedInt.hashCode()
 
   @Benchmark
-  def `##_wrapped`(): Int =
+  def `##_wrapped`(): Int = {
     wrappedInt.##
+  }
+
+  @Benchmark
+  def hashCode_wrappedwithhash(): Int =
+    wrappedWithHash.hashCode()
+
+  @Benchmark
+  def `##_wrappedwithhash`(): Int = {
+    wrappedWithHash.##
+  }
 
 }
 
 case class ValueClass(i: Int) extends AnyVal
 
 case class Wrapped(i: Int)
+
+case class WrappedWithHash(i: Int) {
+  override def hashCode(): Int = i.##
+}
