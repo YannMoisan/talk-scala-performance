@@ -14,6 +14,14 @@ class: center, middle
 
 ---
 
+# Disclaimers
+
+### You ain't gonna need it
+
+### JIT doesn't exist
+
+---
+
 # Memory allocation
 
 > Experience shows that sustained allocation rates of greater than 1 GB/s are
@@ -208,12 +216,17 @@ jshell> i.toString()
 
 ---
 
+# Java value type
+
+[JEP 169](http://openjdk.java.net/jeps/169) : Value Objects
+
+---
+
 # Types in Scala
 
 Unified Type System cf: http://ktoso.github.io/scala-types-of-types/#unified-type-system-any-anyref-anyval
 
 ![scala types](http://ktoso.github.io/scala-types-of-types/assets/img/scala-types.png)
-
 
 ---
 
@@ -280,37 +293,6 @@ instances of `java.lang.Long`
 
 ---
 
-# case class `hashCode`
-
-```scala
-case class Id(value: Long)
-Id(1L).hashCode
-```
-
---
-
-.section[Bad because] scalac generates a call to `MurmurHash3.productHash`
-
-```scala
-trait Product {
-  def productElement(n: Int): Any
-}
-```
-
----
-
-# case class `hashCode`
-
-.section[Prefer]
-
-```scala
-case class Id(value: Long) {
-  override def hashCode(): Int = value.##
-}
-```
-
----
-
 # How to avoid boxing
 
 - array : `Array[Int]` uses an `int[]`
@@ -336,6 +318,8 @@ The array is converted to `ArrayOps` via implicit conversion and at runtime it c
 # Array[Int]
 
 .section[Prefer] good old `while` loops
+
+Note : in Scala 2.13, `indexOf` has been added on `ArrayOps`. cf: https://github.com/scala/scala/pull/6572
 
 ---
 
@@ -449,6 +433,75 @@ http://ktoso.github.io/scala-types-of-types/#value-class
 
 ---
 
+# Value class `hashCode`
+
+```scala
+Id(1L).hashCode
+```
+--
+
+.section[Bad because] allocates
+
+scalac generates code that calls `Id$.hashCode$extension`
+
+```scala
+ 3: aload_0
+ 4: invokevirtual #40                 // Method i:()I
+ 7: invokevirtual #87                 // Method $line24/$read$$iw$Id$.hashCode$extension:(I)I
+ 0: getstatic     #38                 // Field $line24/$read$$iw$Id$.MODULE$:L$line24/$read$$iw$ValueClassInt$;
+10: ireturn
+```
+
+---
+
+# Value class `hashCode`
+
+`:javap Id$.hashCode$extension`
+
+```scala
+0: iload_1
+1: invokestatic  #54                 // Method scala/runtime/BoxesRunTime.boxToInteger:(I)Ljava/lang/Integer;
+4: invokevirtual #111                // Method java/lang/Object.hashCode:()I
+7: ireturn
+```
+
+---
+
+# case class `hashCode`
+
+```scala
+case class Id(value: Long)
+Id(1L).hashCode
+```
+
+--
+
+.section[Bad because] slow
+
+scalac generates this code
+
+```scala
+val h1 = scala.runtime.Statics.mix(-889275714, "Id".hashCode())
+val h2 = scala.runtime.Statics.mix(h1, 1)
+scala.runtime.Statics.finalizeHash(h2, 1)
+```
+
+---
+
+# case class `hashCode`
+
+.section[Prefer]
+
+```scala
+case class Id(value: Long) {
+  override def hashCode(): Int = value.##
+}
+```
+
+> Equivalent to x.hashCode except for boxed numeric types and null. For numerics, it returns a hash value which is consistent with value equality: if two value type instances compare as true, then ## will produce the same hash value for each of them. For null returns a hashcode where null.hashCode throws a NullPointerException.
+
+---
+
 # Value class
 
 When Allocation Is Necessary
@@ -524,7 +577,21 @@ key.hashCode()
 
 --
 
-.section[Bad because] instantiates 2 `Id` and 2 `Long`
+.section[Bad because] instantiates 2 `Id` and 2 `Int`
+
+scalac generates code that calls `ScalaRunTime._hashCode`
+
+```scala
+object ScalaRunTime {
+  def _hashCode(x: Product): Int = MurmurHash3.productHash(x)
+}
+```
+
+which calls
+
+```scala
+def productElement(n: Int): Any
+```
 
 ---
 
@@ -590,7 +657,7 @@ ids.contains(1)
 
 ## Set
 
-.section[Prefer] `BitSet` when ids are dense and small
+.section[Prefer] `BitSet` when ids are positive, dense and small
 
 ---
 
