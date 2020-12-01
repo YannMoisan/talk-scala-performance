@@ -6,4 +6,7 @@ ThisBuild / organizationName := "example"
 enablePlugins(JmhPlugin)
 
 lazy val root = (project in file("."))
-  .settings(name := "talk-scala-performance")
+  .settings(
+    name := "talk-scala-performance",
+    libraryDependencies += "org.typelevel" %% "cats-core" % "2.2.0"
+  )
