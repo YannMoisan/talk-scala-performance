@@ -95,19 +95,25 @@ case class Settings(
 ```scala
 for {
   a <- Some(1)
-  b = 2
-} yield a
+  b = f(a)
+} yield b
 ```
 
 --
 
-.section[Bad because] Allocates a `Tuple2`
+.section[Bad because] Allocates a `Tuple2` [dotty#2573](https://github.com/lampepfl/dotty/issues/2573)
 
 ```scala
 Some.apply(1)
-  .map { (a: Int) => val b: Int = 2; Tuple2.apply(a, b) }
-  .map({ case (a, b) => a })
+  .map { (a: Int) => val b: Int = Id.f.apply(a); Tuple2.apply(a: Int, b) }
+  .map({ case (a: Int, b) => b })
 ```
+
+---
+
+# for comprehension
+
+.section[Prefer] [better-monadic-for](https://github.com/oleg-py/better-monadic-for)
 
 ---
 
@@ -536,7 +542,8 @@ Because
 ```scala
 trait Eq[@sp A] extends Any with Serializable { self =>
 ```
-
+`
+[cats#3702](https://github.com/typelevel/cats/pull/3702)
 
 ---
 
@@ -649,7 +656,7 @@ ids.contains(1)
 
 --
 
-.section[Bad because] `HashSet[Int]` is slow
+.section[Bad because] `HashSet[Int]` is slow and `contains` generates boxing
 
 ---
 
@@ -658,6 +665,33 @@ ids.contains(1)
 ## Set
 
 .section[Prefer] `BitSet` when ids are positive, dense and small
+
+
+
+---
+
+# Collections
+
+## BitSet
+
+```
+val s1 : BitSet = ???
+val s2 : BitSet = ???
+s1.intersect(s2).nonEmpty
+```
+--
+
+.section[Bad because] slow and builds an intermediary set
+
+---
+
+# Collections
+
+## BitSet
+
+.section[Prefer] `java.util.BitSet`
+
+`intersects` return a `Boolean` (25x speed-up)
 
 ---
 
@@ -714,6 +748,8 @@ val buffer : Map[Int, Double] = ???
 ---
 
 # Thanks
+
+@nrinaudo for the inspiration [scala-best-practices](https://nrinaudo.github.io/talk-scala-best-practices/)
 
     </textarea>
     <script src="js/remark.js" type="text/javascript">
