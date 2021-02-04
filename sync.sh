@@ -1,1 +1,1 @@
-rsync -a site/ blog:/var/target/talk-scala-performance
+rsync -a site/ blog:/var/target/scala-performance
