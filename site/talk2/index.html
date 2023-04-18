@@ -14,6 +14,23 @@ class: center, middle
 
 ---
 
+# Advent of Code
+
+```
+Advent of Code [About] [Events] [Shop] [Settings] [Log Out]
+   <y>2015</y> [Calendar] [AoC++] [Sponsors] [Leaderboard] [Stats]
+
+--- Day 18: Like a GIF For Your Yard ---
+
+After the million lights incident, the fire code has gotten stricter: now, at most ten thousand lights are allowed. You arrange them in a 100x100 grid.
+...
+```
+
+[Year 2015 - Day 18](https://adventofcode.com/2015/day/18)
+
+
+---
+
 # Conway's Game of Life
 
 ![glider](https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif)
@@ -462,7 +479,7 @@ TODO what is $adapted
 
 ---
 
-```
+```scala
 scala> val indices : Seq[(Int, Int)] = null
 val indices: Seq[(Int, Int)] = null
 
@@ -473,6 +490,21 @@ scala> def f = indices.count { case (neighborRow, neighborCol) => grid(neighborR
 def f: Int
 
 scala> :javap f
+```
+
+---
+
+```scala
+public static final java.lang.Object $anonfun$f$1$adapted($line6.$read$$iw, scala.Tuple2);
+  descriptor: (L$line6/$read$$iw;Lscala/Tuple2;)Ljava/lang/Object;
+  flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC
+  Code:
+    stack=2, locals=2, args_size=2
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #113                // Method $anonfun$f$1:(L$line6/$read$$iw;Lscala/Tuple2;)Z
+       5: invokestatic  #119                // Method scala/runtime/BoxesRunTime.boxToBoolean:(Z)Ljava/lang/Boolean;
+       8: areturn
 ```
 
 ---
@@ -625,6 +657,14 @@ No specialized version of `(Int, Int) => Seq[(Int, Int)]`
 
 ## col first
 
+`Array[Array[Char]]`
+
+<img src="img/array2.png" alt="alt text" title="image Title"/>
+
+---
+
+## col first
+
 Big O notation is broken !
 
 ```scala
@@ -640,13 +680,33 @@ L1-dcache-load-misses | 4756014,562 #/op | 12430343,601 #/op |
 
 ## 1D-array
 
+`Array.ofDim[Char](100,100)`
+- inner array: 216 bytes
+    - header: 12 bytes
+    - data: 100 * 2 bytes
+    - alignement: 4 bytes
+- outer array: 416 bytes
+    - header: 12 bytes
+    - data: 100 * 4 bytes
+    - alignement: 4 bytes
+- total : 416 + 100 * 216 = 22016 bytes
+
+---
+
+## 1D-array
+
+`Array.ofDim[Char](10000)` = 20016 bytes
+- header: 12 bytes
+- data: 10000 * 2 bytes
+- alignement: 4 bytes
+
+---
+
+## 1D-array
+
 row-major : `index = row * 100 + col`
 
 [memory-layout-of-multi-dimensional-arrays](https://eli.thegreenplace.net/2015/memory-layout-of-multi-dimensional-arrays)
-
-size in bytes
-- `Array.ofDim[Char](100,100)` = 22016 (16 + 100 * (216 + 4))
-- `Array.ofDim[Char](10000)` = 20016
 
 ---
 
@@ -670,7 +730,13 @@ size in bytes
 
 `11 ms/op`
 
-`Array.ofDim[Char](10000)` = 10016
+`Array.ofDim[Boolean](10000)` = 10016
+
+---
+
+## Diagram
+
+<img src="img/execution-time.png" alt="alt text" title="image Title" width="100%"/>
 
 ---
 
