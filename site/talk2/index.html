@@ -404,7 +404,7 @@ map + filter => collect
   }
 ```
 
-=> tip : object pooling
+=> tip : [object pool](https://en.wikipedia.org/wiki/Object_pool_pattern)
 
 ---
 
@@ -542,6 +542,8 @@ https://blogs.oracle.com/javamagazine/post/behind-the-scenes-how-do-lambda-expre
  465061888   11.76%     1336  char[]
   68184064    1.72%      197  com.Y2015D18Bench$$Lambda$62
 ```
+
+`IntRef` to capture the mutable variable.
 
 ---
 
@@ -737,6 +739,28 @@ row-major : `index = row * 100 + col`
 ## Diagram
 
 <img src="img/execution-time.png" alt="alt text" title="image Title" width="100%"/>
+
+---
+
+## Takeaways
+
+- Use a profiler instead of random guess
+- Beware of boxing
+- Beware of allocations
+- Beware of collection API
+- Think about Object pool
+- Think about Precomputation
+
+---
+
+## Links
+
+- [Advent of Code](https://adventofcode.com)
+- [sbt-jmh](https://github.com/sbt/sbt-jmh)
+- [async manual](https://krzysztofslusarski.github.io/2022/12/12/async-manual.html)
+- [memory layout of multi dimensional arrays](https://eli.thegreenplace.net/2015/memory-layout-of-multi-dimensional-arrays)
+- [scala bytecode and the JVM](https://www.toptal.com/scala/scala-bytecode-and-the-jvm)
+- [better monadic for](https://github.com/oleg-py/better-monadic-for)
 
 ---
 
