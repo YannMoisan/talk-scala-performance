@@ -125,6 +125,11 @@ jmh:run .*Y2015D18Bench.* -prof gc
 
 allocation rate = 2592 MB/sec
 
+### average time
+
+`700 ms/op`
+
+
 ---
 
 # allocation profiler
@@ -196,7 +201,7 @@ tip: avoid temporary objects
 
 ### average time
 
-`450 ms/op`
+`450 ms/op` (-35%)
 
 ### top allocations
 
@@ -229,7 +234,7 @@ tip: avoid temporary objects
 
 ### average time
 
-`266 ms/op`
+`266 ms/op` (-40%)
 
 ### top allocations
 
@@ -265,7 +270,7 @@ tip: avoid temporary objects
 
 ### average time
 
-`406 ms/op`
+`406 ms/op` (+52%)
 
 ### top allocations
 
@@ -305,7 +310,7 @@ LEARNING : The JIT doesn't factorize all constants
 
 ### average time
 
-`387 ms/op`
+`387 ms/op` (-4.6%)
 
 ### top allocations
 
@@ -352,7 +357,7 @@ tip : better monadic for
 
 ### average time
 
-`116 ms/op`
+`116 ms/op` (-70%)
 
 ### top allocations
 
@@ -382,7 +387,7 @@ map + filter => collect
 
 ### average time
 
-`105 ms/op`
+`105 ms/op` (-9.4%)
 
 ### top allocations
 
@@ -412,7 +417,7 @@ map + filter => collect
 
 ### average time
 
-`97 ms/op`
+`97 ms/op` (-7.6%)
 
 ### top allocations
 
@@ -444,7 +449,7 @@ tip: precompute all the things !
 
 ### average time
 
-`46 ms/op`
+`46 ms/op` (-52%)
 
 ### top allocations
 
@@ -473,9 +478,7 @@ Questions :
 
 <img src="img/cache.png" alt="alt text" title="image Title" width="100%"/>
 
-Lot of time in count (71,8%)
-
-TODO what is $adapted
+Lot of time in `count` (71,8%)
 
 ---
 
@@ -531,7 +534,7 @@ https://blogs.oracle.com/javamagazine/post/behind-the-scenes-how-do-lambda-expre
 
 ### average time
 
-`42 ms/op`
+`42 ms/op` (-8.6%)
 
 ### top allocations
 
@@ -565,7 +568,7 @@ https://blogs.oracle.com/javamagazine/post/behind-the-scenes-how-do-lambda-expre
 
 ### average time
 
-`32 ms/op`
+`32 ms/op` (-23%)
 
 ### top allocations
 
@@ -615,7 +618,7 @@ No specialized version of `(Int, Int) => Seq[(Int, Int)]`
 
 ### average time
 
-`27 ms/op`
+`27 ms/op` (-15%)
 
 ---
 
@@ -623,7 +626,7 @@ No specialized version of `(Int, Int) => Seq[(Int, Int)]`
 
 ### average time
 
-`25 ms/op`
+`25 ms/op` (-7%)
 
 ---
 
@@ -653,7 +656,7 @@ No specialized version of `(Int, Int) => Seq[(Int, Int)]`
 
 ### average time
 
-`50 ms/op`
+`50 ms/op` (+100%)
 
 ---
 
@@ -716,7 +719,7 @@ row-major : `index = row * 100 + col`
 
 ### average time
 
-`12 ms/op`
+`12 ms/op` (-52%)
 
 ```scala
      bytes  percent  samples  top
@@ -730,7 +733,7 @@ row-major : `index = row * 100 + col`
 
 ### average time
 
-`11 ms/op`
+`11 ms/op` (-8%)
 
 `Array.ofDim[Boolean](10000)` = 10016
 
@@ -746,7 +749,7 @@ row-major : `index = row * 100 + col`
 
 - Use a profiler instead of random guess
 - Beware of boxing
-- Beware of allocations
+- Beware of allocations (intermediate collections, …)
 - Beware of collection API
 - Think about Object pool
 - Think about Precomputation
