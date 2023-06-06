@@ -1,2 +1,2 @@
 #! /bin/bash
-rsync -a site/ blog:/var/www/talks.yannmoisan.com
+rsync -a --delete site/ blog:/var/www/talks.yannmoisan.com
